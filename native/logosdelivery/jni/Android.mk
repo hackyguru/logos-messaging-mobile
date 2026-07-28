@@ -3,7 +3,9 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := logosdelivery
-LOCAL_SRC_FILES := ../jniLibs/$(TARGET_ARCH_ABI)/liblogosdelivery.so
+# Canonical copy of the prebuilt Nim lib — the same file the config plugin
+# installs into the generated project. Kept in one place only.
+LOCAL_SRC_FILES := ../$(TARGET_ARCH_ABI)/liblogosdelivery.so
 
 include $(PREBUILT_SHARED_LIBRARY)
 

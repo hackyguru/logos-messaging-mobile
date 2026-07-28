@@ -47,3 +47,7 @@ native/**/*.a
 native/**/*.so
 native/**/*.o
 native/**/*.o.d
+
+# ndk-build output
+native/logosdelivery/jni/obj/
+native/logosdelivery/jni/libs/
