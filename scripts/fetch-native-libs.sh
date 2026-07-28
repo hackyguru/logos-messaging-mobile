@@ -23,7 +23,7 @@ fetch_archive() { # $1=name  $2=expected sha256  $3...=part suffixes
   for suffix in "$@"; do
     local part="part-$name-$suffix"
     echo "  $part"
-    curl -fL --retry 8 --retry-all-errors --retry-delay 5 -C - \
+    curl -fL -# --retry 8 --retry-all-errors --retry-delay 5 -C - \
       -o "$work/$part" "$BASE/$part"
     cat "$work/$part" >> "$out"
   done
