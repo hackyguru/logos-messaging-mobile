@@ -41,3 +41,9 @@ example
 # generated native folders
 /ios
 /android
+
+# prebuilt native binaries — restore with scripts/fetch-native-libs.sh
+native/**/*.a
+native/**/*.so
+native/**/*.o
+native/**/*.o.d
