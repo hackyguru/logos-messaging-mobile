@@ -11,28 +11,47 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```
 
    The `logosdelivery` `.a`/`.so` binaries are too large for git, so they live as
-   assets on the [`native-libs-v1`](https://github.com/hackyguru/logos-messaging-mobile/releases/tag/native-libs-v1)
-   release. `npm install` fetches and verifies them into `native/logosdelivery/`
-   via `postinstall`; it is a no-op once they are present. To refetch by hand:
+   assets on the [`native-libs-v2`](https://github.com/hackyguru/logos-messaging-mobile/releases/tag/native-libs-v2)
+   release. `npm install` fetches and checksum-verifies them into
+   `native/logosdelivery/` via `postinstall`; it is a no-op once they are
+   present. To refetch by hand:
 
    ```bash
    ./scripts/fetch-native-libs.sh --force
    ```
 
-2. Start the app
+2. Build and run
 
    ```bash
-   npx expo start
+   npm run ios       # or: npm run android
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   This runs `expo prebuild` (regenerating `ios/` and `android/`, both
+   gitignored) and compiles the app. **`npx expo start` on its own is not
+   enough** — the embedded Logos Delivery node is a hand-written native module,
+   so it cannot run in Expo Go. Once a build is installed, `npm start` will
+   attach to it for JS-only changes.
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+### Supported targets
+
+The prebuilt native libraries are arm64-only, which constrains where the app
+can run:
+
+| Target | Supported | Notes |
+| --- | --- | --- |
+| iOS Simulator (Apple Silicon) | yes | the `.a` files are built for `IOSSIMULATOR`, arm64, minos 18.0 |
+| Physical iPhone | no | no device slice in the vendored `.a`; linking fails |
+| Intel Mac | no | would need an x86_64 simulator slice |
+| Android arm64 (device or Apple Silicon emulator) | yes | `APP_ABI := arm64-v8a` |
+| Android x86_64 emulator | no | no x86_64 build of `liblogosdelivery` |
+
+Rebuilding the libraries for other targets means rebuilding logos-delivery
+itself; see `native/logosdelivery/jni` (ndk-build) for the Android JNI bridge.
+
+You will also need the usual native toolchains: Xcode and CocoaPods for iOS,
+and the Android SDK plus NDK for Android.
 
 ## Get a fresh project
 
