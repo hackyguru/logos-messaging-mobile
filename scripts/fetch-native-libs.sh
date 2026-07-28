@@ -5,15 +5,10 @@
 # Runs automatically via `npm install` (postinstall). It is a no-op when the
 # libraries are already present, so repeat installs cost nothing. Pass --force
 # to re-download regardless.
-#
-# The archives are stored as 8 MB parts because the release was uploaded over a
-# slow link and GitHub's asset upload cannot resume; the parts are concatenated
-# and checksum-verified here.
 set -euo pipefail
 
-BASE="https://github.com/hackyguru/logos-messaging-mobile/releases/download/native-libs-v1"
-IOS_PARTS=(aa ab ac ad ae)
-ANDROID_PARTS=(aa ab ac ad ae af)
+TAG="native-libs-v1"
+BASE="https://github.com/hackyguru/logos-messaging-mobile/releases/download/$TAG"
 IOS_SHA256="78ed59dea64883514858395e3fa27135ae812ca16fd0a891dbc1ac28920cb41a"
 ANDROID_SHA256="6e41971ceac237ebcfad390befd1031d0d6a748441d82a12069ab482dd1828aa"
 
@@ -46,17 +41,13 @@ trap 'rm -rf "$work"' EXIT
 # Progress bar interactively; quiet under `npm install` and CI.
 if [ -t 1 ]; then progress="-#"; else progress="-s"; fi
 
-fetch_archive() { # $1=name  $2=expected sha256  $3...=part suffixes
-  local name=$1 want=$2; shift 2
-  local out="$work/$name.tar.gz"
-  : > "$out"
-  for suffix in "$@"; do
-    local part="part-$name-$suffix"
-    echo "  $part"
-    curl -fL $progress --retry 8 --retry-all-errors --retry-delay 5 -C - \
-      -o "$work/$part" "$BASE/$part"
-    cat "$work/$part" >> "$out"
-  done
+fetch_archive() { # $1=platform  $2=expected sha256
+  local name="native-libs-$1.tar.gz" want=$2
+  local out="$work/$name"
+  echo "Fetching $name ..."
+  # --retry-all-errors + -C - so a dropped connection resumes rather than restarts.
+  curl -fL $progress --retry 8 --retry-all-errors --retry-delay 5 -C - \
+    -o "$out" "$BASE/$name"
 
   local got
   got=$(shasum -a 256 "$out" | cut -d' ' -f1)
@@ -67,10 +58,8 @@ fetch_archive() { # $1=name  $2=expected sha256  $3...=part suffixes
   tar xzf "$out"
 }
 
-echo "Fetching iOS libraries..."
-fetch_archive ios "$IOS_SHA256" "${IOS_PARTS[@]}"
-echo "Fetching Android libraries..."
-fetch_archive android "$ANDROID_SHA256" "${ANDROID_PARTS[@]}"
+fetch_archive ios "$IOS_SHA256"
+fetch_archive android "$ANDROID_SHA256"
 
 for f in "${REQUIRED[@]}"; do
   if [ ! -s "$f" ]; then
