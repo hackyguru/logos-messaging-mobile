@@ -10,17 +10,16 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Fetch the prebuilt native libraries
-
-   ```bash
-   ./scripts/fetch-native-libs.sh
-   ```
-
    The `logosdelivery` `.a`/`.so` binaries are too large for git, so they live as
    assets on the [`native-libs-v1`](https://github.com/hackyguru/logos-messaging-mobile/releases/tag/native-libs-v1)
-   release. The script downloads and verifies them into `native/logosdelivery/`.
+   release. `npm install` fetches and verifies them into `native/logosdelivery/`
+   via `postinstall`; it is a no-op once they are present. To refetch by hand:
 
-3. Start the app
+   ```bash
+   ./scripts/fetch-native-libs.sh --force
+   ```
+
+2. Start the app
 
    ```bash
    npx expo start
