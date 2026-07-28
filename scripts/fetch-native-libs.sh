@@ -7,10 +7,10 @@
 # to re-download regardless.
 set -euo pipefail
 
-TAG="native-libs-v1"
+TAG="native-libs-v2"
 BASE="https://github.com/hackyguru/logos-messaging-mobile/releases/download/$TAG"
-IOS_SHA256="78ed59dea64883514858395e3fa27135ae812ca16fd0a891dbc1ac28920cb41a"
-ANDROID_SHA256="6e41971ceac237ebcfad390befd1031d0d6a748441d82a12069ab482dd1828aa"
+IOS_SHA256="737266a48d5f7e729b14b58d279babc45f83f5b7d09e6f53822aa33668340e3d"
+ANDROID_SHA256="e2ea6569f5dd5fa8840641bbf20800f790b5287b2185c28a3777a94bd57bbbcf"
 
 # The files withLogosDelivery.js and LogosMessaging.podspec actually consume.
 REQUIRED=(
