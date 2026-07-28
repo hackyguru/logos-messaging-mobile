@@ -53,6 +53,8 @@ jobs:
             ! -path native/logosdelivery/ios \
             -exec rm -rf {} +
           find native/logosdelivery/ios -type f ! -name '*.a' -delete
+          # AppleDouble sidecars from the archives originally built on macOS.
+          find native -name '._*' -delete
 
           echo "--- after ---"; find native -type f | sort
 
