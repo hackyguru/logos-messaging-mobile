@@ -1,6 +1,12 @@
-# Welcome to your Expo app 👋
+# cockroach
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native (Expo) chat app that runs a **Logos Delivery (Waku) node
+embedded on-device**, rather than talking to a remote server. The node ships as
+a prebuilt native library wired in through a custom config plugin —
+[`plugins/withLogosDelivery.js`](plugins/withLogosDelivery.js) — using a
+hand-written JNI bridge on Android and a local CocoaPod on iOS. Where the native
+node is unavailable, the app falls back to the js-waku backend
+(`src/lib/waku-chat.ts`).
 
 ## Get started
 
@@ -32,7 +38,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    so it cannot run in Expo Go. Once a build is installed, `npm start` will
    attach to it for JS-only changes.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Screens live in **`src/app`** using [file-based routing](https://docs.expo.dev/router/introduction);
+the messaging logic is in `src/lib`.
 
 ### Supported targets
 
@@ -53,21 +60,11 @@ itself; see `native/logosdelivery/jni` (ndk-build) for the Android JNI bridge.
 You will also need the usual native toolchains: Xcode and CocoaPods for iOS,
 and the Android SDK plus NDK for Android.
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+> [!WARNING]
+> `npm run reset-project` is left over from the `create-expo-app` template and
+> must **not** be run here. It moves `src/` and `scripts/` into `example/`
+> (which is gitignored), wiping the app and breaking `npm install`, since
+> `postinstall` depends on `scripts/fetch-native-libs.sh`.
 
 ## Learn more
 
